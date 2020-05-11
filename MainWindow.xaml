@@ -1,0 +1,80 @@
+﻿<Window x:Class="mvvmPilkarze.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:mvvmPilkarze"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:vm="clr-namespace:mvvmPilkarze.ModelWidoku"
+        mc:Ignorable="d"
+       
+    Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <vm:PilkarzViewModel x:Key="PVM"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource PVM}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <Label Content="Imie"/>
+            <TextBox x:Name="TBimie" Text="{Binding Path=Imie, Mode=TwoWay}"/>
+            <Label Content="Nazwisko"/>
+            <TextBox x:Name="TBNazwisko" Text="{Binding Path=Nazwisko, Mode=TwoWay}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Wiek" Grid.Column="0"/>
+                <Label Content="{Binding Path=Value, ElementName=SliderWiek}" Grid.Column="1" HorizontalAlignment="Right"/>
+            </Grid>
+            <Slider x:Name="SliderWiek" Maximum="100" Minimum="0" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Path=Wiek, Mode=TwoWay}"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Waga" Grid.Column="0"/>
+                <Label Content="{Binding Path=Value, ElementName=SliderWaga}" Grid.Column="1" HorizontalAlignment="Right"/>
+            </Grid>
+            
+            <Slider x:Name="SliderWaga" Maximum="100" Minimum="0" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding Path=Waga, Mode=TwoWay}"/>
+
+            <Button x:Name="Bdodaj" Content="Dodaj" Command="{Binding DodajPilkarza}"/>
+            <Button x:Name="Busun" Content="Usuń" Command="{Binding UsunPilkarza}"/>
+            <Button x:Name="Bedytuj" Content="Edytuj" Command="{Binding EdytujPilkarza}"/>
+
+        </StackPanel>
+
+
+
+        <ListView Grid.Column="1" ItemsSource="{Binding listaPilkarzy}" SelectedIndex="{Binding Index}" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Imie}" Header="Imie" Width="110"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Nazwisko}" Header="Nazwisko" Width="110"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Waga}" Header="Waga" Width="110"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Wiek}" Header="Wiek" Width="110"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="SelectionChanged">
+                <i:InvokeCommandAction Command="{Binding zaladujPilkarza}"/>
+            </i:EventTrigger>
+
+            
+
+            <i:EventTrigger EventName="Closing">
+                <i:InvokeCommandAction Command="{Binding Zapisz}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+
+
+
+    </Grid>
+</Window>
